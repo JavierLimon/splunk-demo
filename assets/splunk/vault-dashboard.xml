@@ -1,0 +1,126 @@
+<form>
+  <label>Basic Vault Token Metrics</label>
+  <description>Some basic Vault token metrics and related system metrics in an example dashboard.</description>
+  <fieldset submitButton="false">
+    <input type="time" searchWhenChanged="true" token="global_time_tok">
+      <label>Time Range</label>
+      <default>
+        <earliest>-1h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown">
+      <label>Time Span</label>
+      <choice value="auto">auto</choice>
+      <choice value="5s">5s</choice>
+      <choice value="10s">10s</choice>
+      <choice value="30s">30s</choice>
+      <choice value="1m">1m</choice>
+      <choice value="5m">5m</choice>
+      <choice value="10m">10m</choice>
+      <choice value="30m">30m</choice>
+      <choice value="1h">1h</choice>
+      <default>auto</default>
+      <change>
+        <eval token="timechart_span">if($value$ == "auto", "", "span=".$value$)</eval>
+        <eval token="mstats_span">"span=".$value$</eval>
+      </change>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <chart>
+        <title>vault.runtime.alloc_bytes.value</title>
+        <search>
+          <query>| mstats avg("vault.runtime.alloc_bytes.value") prestats=true WHERE "index"="vault-metrics" $mstats_span$
+| timechart avg("vault.runtime.alloc_bytes.value") AS Avg $timechart_span$
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6"}</option>
+        <option name="charting.gridLinesX.showMajorLines">true</option>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid"}</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>cpu.usage_user</title>
+        <search>
+          <query>| mstats avg("cpu.usage_user") prestats=true WHERE "index"="vault-metrics" $mstats_span$
+| timechart avg("cpu.usage_user") AS Avg $timechart_span$
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.chart">area</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6"}</option>
+        <option name="charting.gridLinesX.showMajorLines">true</option>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid"}</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>vault.token.create.mean</title>
+        <search>
+          <query>| mstats avg("vault.token.create.mean") prestats=true WHERE "index"="vault-metrics" $mstats_span$
+| timechart avg("vault.token.create.mean") AS Avg $timechart_span$
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6"}</option>
+        <option name="charting.gridLinesX.showMajorLines">true</option>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid"}</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>vault.token.create.count</title>
+        <search>
+          <query>| mstats sum("vault.token.create.count") prestats=true WHERE "index"="vault-metrics" $mstats_span$
+| timechart sum("vault.token.create.count") AS Sum $timechart_span$
+| fields - _span*</query>
+          <earliest>$global_time_tok.earliest$</earliest>
+          <latest>$global_time_tok.latest$</latest>
+        </search>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.fieldColors">{"Avg":"#1e93c6","Sum":"#f2b827"}</option>
+        <option name="charting.gridLinesX.showMajorLines">true</option>
+        <option name="charting.axisY.abbreviation">auto</option>
+        <option name="charting.legend.mode">seriesCompare</option>
+        <option name="charting.fieldDashStyles">{"Avg":"solid","Sum":"solid"}</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="displayview">analytics_workspace</option>
+      </chart>
+    </panel>
+  </row>
+</form>
